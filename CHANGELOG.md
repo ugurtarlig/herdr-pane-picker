@@ -7,6 +7,17 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-17
+
+### Added
+
+- Home-row-first character hints drawn directly over panes.
+- Portable Herdr popup action for terminal-independent key capture.
+- Optional popup-free WezTerm integration with native `PaneSelect` fallback.
+- Pre-rendered rounded PNG badges with a dependency-free RGBA fallback.
+- Automatic overlay cleanup and structured local error logging.
+- Fictional demo layout for privacy-safe documentation screenshots.
+
 ### Fixed
 
 - An inherited `HERDR_SOCKET_PATH` no longer redirects the demo to the live
@@ -24,17 +35,6 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   SIGINT/SIGTERM/SIGHUP. A signal wakeup pipe closes a race where a
   termination signal could arrive before the pane blocked on input and be
   lost until the next keypress.
-
-## [0.1.0] - 2026-07-17
-
-### Added
-
-- Home-row-first character hints drawn directly over panes.
-- Portable Herdr popup action for terminal-independent key capture.
-- Optional popup-free WezTerm integration with native `PaneSelect` fallback.
-- Pre-rendered rounded PNG badges with a dependency-free RGBA fallback.
-- Automatic overlay cleanup and structured local error logging.
-- Fictional demo layout for privacy-safe documentation screenshots.
 
 ### Changed
 
