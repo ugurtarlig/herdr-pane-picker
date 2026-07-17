@@ -150,6 +150,24 @@ python3 -m pip install Pillow
 python3 pane_picker.py build-assets
 ```
 
+### Documentation screenshots
+
+Capture screenshots only from an isolated session so no personal tabs or pane
+content appear. The demo creates its own `pane-picker-demo` tab and never
+replaces an existing layout; it refuses to run against the default session.
+
+```sh
+herdr --session pane-picker-demo          # in a fresh terminal window
+HERDR_SESSION=pane-picker-demo python3 scripts/demo_layout.py
+HERDR_SESSION=pane-picker-demo python3 pane_picker.py show
+```
+
+Any keypress inside a demo pane closes it. Remove the whole demo tab with:
+
+```sh
+HERDR_SESSION=pane-picker-demo python3 scripts/demo_layout.py --close
+```
+
 ## Uninstall
 
 ```sh

@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Render one static fictional pane for the documentation capture."""
+"""Render one static fictional pane for the documentation capture.
+
+The pane ends on any keypress, on stdin EOF, and on SIGINT/SIGTERM/SIGHUP, so
+demo panes never trap the user inside a layout they cannot close.
+"""
 
 from __future__ import annotations
 
+import os
+import select
 import signal
 import sys
-import time
+import termios
+import tty
 
 
 SCREENS = {
@@ -59,6 +66,42 @@ SCREENS = {
 }
 
 
+def raise_system_exit(*_: object) -> None:
+    raise SystemExit
+
+
+def wait_for_exit() -> None:
+    """Block until any keypress, stdin EOF, or a termination signal.
+
+    A wakeup pipe closes the race where a signal lands after the interpreter's
+    last signal check but before read() blocks, which would otherwise leave the
+    pane alive until the next keypress.
+    """
+    fd = sys.stdin.fileno()
+    saved = None
+    try:
+        saved = termios.tcgetattr(fd)
+        tty.setcbreak(fd)
+    except (termios.error, OSError, ValueError):
+        saved = None
+    wake_r, wake_w = os.pipe()
+    os.set_blocking(wake_w, False)
+    previous_wakeup = signal.set_wakeup_fd(wake_w)
+    try:
+        ready, _, _ = select.select([fd, wake_r], [], [])
+        if fd in ready:
+            # One byte on any keypress, b"" on EOF; both end the pane.
+            os.read(fd, 1)
+    except OSError:
+        pass
+    finally:
+        signal.set_wakeup_fd(previous_wakeup)
+        os.close(wake_r)
+        os.close(wake_w)
+        if saved is not None:
+            termios.tcsetattr(fd, termios.TCSADRAIN, saved)
+
+
 def main() -> int:
     role = sys.argv[1] if len(sys.argv) > 1 else "shell"
     title, lines, accent = SCREENS.get(role, SCREENS["shell"])
@@ -68,16 +111,13 @@ def main() -> int:
     sys.stdout.write("\n".join(lines) + "\n")
     sys.stdout.flush()
 
-    signal.signal(signal.SIGTERM, lambda *_: raise_system_exit())
+    signal.signal(signal.SIGTERM, raise_system_exit)
+    signal.signal(signal.SIGHUP, raise_system_exit)
     try:
-        while True:
-            time.sleep(3600)
+        wait_for_exit()
     except (KeyboardInterrupt, SystemExit):
-        return 0
-
-
-def raise_system_exit() -> None:
-    raise SystemExit
+        pass
+    return 0
 
 
 if __name__ == "__main__":

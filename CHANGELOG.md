@@ -7,6 +7,17 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+### Fixed
+
+- The demo layout now creates its own `pane-picker-demo` tab instead of
+  replacing the active tab, refuses to run against the default session, and
+  gains a `--close` teardown flag. Previously it could destroy a real layout,
+  and closing the last demo pane closed the user's tab with it.
+- Demo panes now end on any keypress and on stdin EOF, in addition to
+  SIGINT/SIGTERM/SIGHUP. A signal wakeup pipe closes a race where a
+  termination signal could arrive before the pane blocked on input and be
+  lost until the next keypress.
+
 ## [0.1.0] - 2026-07-17
 
 ### Added
