@@ -2,15 +2,16 @@
 
 Focus a Herdr pane by typing the character shown directly over it.
 
-![Herdr Pane Picker showing fictional demo panes](assets/herdr-pane-picker.png)
+![Herdr Pane Picker hints over a real four-pane workspace](assets/herdr-pane-picker.png)
 
 Hints use a home-row-first alphabet: `a`, `s`, `d`, `f`, then the remaining
 letters. They follow the visual pane order from top to bottom and left to right.
 The picker does not write into pane PTYs or disturb the programs running inside
 them.
 
-The screenshot was captured from a real isolated Herdr session populated by
-`scripts/demo_layout.py`. Its pane content and project names are fictional.
+The screenshot shows the picker over a live four-pane workspace (yazi, Claude
+Code, lazygit, shell). For captures without personal content, a fictional demo
+layout ships in `scripts/` — see Documentation screenshots below.
 
 ## Requirements
 

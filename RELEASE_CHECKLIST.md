@@ -3,8 +3,10 @@
 ## Before publishing
 
 - [ ] Review `README.md`, plugin ID, version, and MIT attribution.
-- [ ] Confirm `assets/herdr-pane-picker.png` comes from the isolated fictional demo session.
-- [ ] Confirm no documentation image contains personal workspaces, paths, or transcripts.
+- [ ] Review every documentation image for content that should not be public
+      (secrets, credentials, work data, third-party names). Personal workspace
+      content is acceptable when deliberately chosen; the fictional demo layout
+      (`scripts/demo_layout.py`) remains available for fully impersonal captures.
 - [ ] Confirm the portable popup action selects and cancels correctly.
 - [ ] Confirm the popup-free WezTerm action selects, cancels, and falls back to native `PaneSelect` outside Herdr.
 - [ ] Run `python3 -m unittest discover -s tests -v`.
