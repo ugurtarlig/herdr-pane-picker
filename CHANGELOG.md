@@ -9,6 +9,13 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Fixed
 
+- An inherited `HERDR_SOCKET_PATH` no longer redirects the demo to the live
+  session when `HERDR_SESSION` is set explicitly; the isolation guard now also
+  refuses any session that already holds tabs, regardless of its name.
+- The demo works in fresh headless sessions (creates the first workspace
+  itself) and `--close` removes the workspace when the demo tab is its last
+  tab.
+
 - The demo layout now creates its own `pane-picker-demo` tab instead of
   replacing the active tab, refuses to run against the default session, and
   gains a `--close` teardown flag. Previously it could destroy a real layout,
