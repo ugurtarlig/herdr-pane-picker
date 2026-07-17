@@ -7,6 +7,25 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-18
+
+### Changed
+
+- Hint badges are twice as large: an 8×4-cell footprint rendered from 128 px
+  assets, so large panes get a clearly visible hint without upscaling blur.
+
+### Fixed
+
+- Demo panes no longer lose a keypress that arrives while the pane is still
+  initializing, and no longer hang or exit nonzero when the pane's PTY is
+  closed while unread output remains (terminal restore uses `TCSANOW`; the
+  standard streams are detached before interpreter shutdown).
+
+### Removed
+
+- The internal demo-layout troubleshooting document; the changelog and README
+  carry the relevant guidance.
+
 ## [0.1.0] - 2026-07-17
 
 ### Added
@@ -41,5 +60,6 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Send graphics updates sequentially to avoid local-socket contention and show
   four badges in approximately 5–7 ms on the reference system.
 
-[Unreleased]: https://github.com/ugurtarlig/herdr-pane-picker/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ugurtarlig/herdr-pane-picker/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/ugurtarlig/herdr-pane-picker/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ugurtarlig/herdr-pane-picker/releases/tag/v0.1.0

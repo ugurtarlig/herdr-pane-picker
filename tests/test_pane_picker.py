@@ -67,7 +67,7 @@ class PaneLayoutTests(unittest.TestCase):
         placement = pane_picker.badge_placement({"width": 81, "height": 31})
         self.assertEqual(
             placement,
-            {"viewport_col": 38, "viewport_row": 14, "grid_cols": 4, "grid_rows": 2},
+            {"viewport_col": 36, "viewport_row": 13, "grid_cols": 8, "grid_rows": 4},
         )
 
 
@@ -76,14 +76,14 @@ class BadgeRenderingTests(unittest.TestCase):
         with mock.patch.object(pane_picker, "render_badge_png") as render:
             image_format, width, height, payload = pane_picker.render_badge_payload("a", 8, 16)
 
-        self.assertEqual((image_format, width, height), ("png", 64, 64))
+        self.assertEqual((image_format, width, height), ("png", 128, 128))
         self.assertTrue(payload.startswith(b"\x89PNG"))
         render.assert_not_called()
 
     def test_rgba_badge_has_transparent_corners_and_opaque_content(self):
         width, height, rgba = pane_picker.render_badge_rgba("a", 10, 20)
 
-        self.assertEqual((width, height), (64, 64))
+        self.assertEqual((width, height), (128, 128))
         self.assertEqual(len(rgba), width * height * 4)
         self.assertEqual(rgba[3], 0)
         center = ((height // 2) * width + width // 2) * 4
@@ -97,8 +97,8 @@ class BadgeRenderingTests(unittest.TestCase):
         self.assertGreater(len(payload["data_base64"]), 100)
         if payload["format"] == "png":
             self.assertTrue(base64.b64decode(payload["data_base64"]).startswith(b"\x89PNG"))
-        self.assertEqual(payload["placement"]["grid_cols"], 4)
-        self.assertEqual(payload["placement"]["grid_rows"], 2)
+        self.assertEqual(payload["placement"]["grid_cols"], 8)
+        self.assertEqual(payload["placement"]["grid_rows"], 4)
 
     def test_cell_size_requires_client_restart_when_host_pixels_are_unavailable(self):
         def request(method, params):

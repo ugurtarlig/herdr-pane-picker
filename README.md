@@ -39,7 +39,7 @@ Do not add a second `[experimental]` table if one already exists. Install the
 reviewed release:
 
 ```sh
-herdr plugin install ugurtarlig/herdr-pane-picker --ref v0.1.0
+herdr plugin install ugurtarlig/herdr-pane-picker --ref v0.1.1
 ```
 
 If Kitty graphics was enabled after the current Herdr client started, detach

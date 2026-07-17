@@ -19,9 +19,12 @@ from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Seque
 
 PLUGIN_ID = "ugurtarlig.pane-picker"
 HINT_ALPHABET = "asdfghjklqwertyuiopzxcvbnm"
-BADGE_GRID_COLS = 4
-BADGE_GRID_ROWS = 2
-BADGE_IMAGE_SIZE = 64
+BADGE_GRID_COLS = 8
+BADGE_GRID_ROWS = 4
+# The badge artwork is authored in a fixed 64-unit coordinate space; rendered
+# output is BADGE_IMAGE_SIZE so the terminal never has to upscale.
+BADGE_DESIGN_SIZE = 64
+BADGE_IMAGE_SIZE = 128
 BADGE_SUPERSAMPLE = 4
 REQUEST_IDS = itertools.count(1)
 SYSTEM_BADGE_FONTS = (
@@ -296,8 +299,8 @@ def render_badge_png(char: str) -> Optional[bytes]:
     if font_path is None:
         return None
     try:
-        scale = BADGE_SUPERSAMPLE
-        size = BADGE_IMAGE_SIZE * scale
+        scale = BADGE_SUPERSAMPLE * BADGE_IMAGE_SIZE // BADGE_DESIGN_SIZE
+        size = BADGE_DESIGN_SIZE * scale
         image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
 
@@ -414,9 +417,9 @@ def render_badge_rgba(
     if glyph is None:
         raise ValueError(f"unsupported hint character: {char!r}")
 
-    scale = BADGE_SUPERSAMPLE
+    scale = BADGE_SUPERSAMPLE * BADGE_IMAGE_SIZE // BADGE_DESIGN_SIZE
     output_size = BADGE_IMAGE_SIZE
-    width = output_size * scale
+    width = BADGE_DESIGN_SIZE * scale
     pixels = bytearray(width * width * 4)
 
     # A soft shadow and a single luminous surface read as a keyboard key,
@@ -464,7 +467,7 @@ def render_badge_rgba(
     )
 
     _paint_dot_glyph(pixels, width, glyph, scale)
-    return output_size, output_size, _downsample_rgba(pixels, width, scale)
+    return output_size, output_size, _downsample_rgba(pixels, width, width // output_size)
 
 
 def render_badge_payload(

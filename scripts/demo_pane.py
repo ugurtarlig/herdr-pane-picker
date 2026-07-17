@@ -81,7 +81,9 @@ def wait_for_exit() -> None:
     saved = None
     try:
         saved = termios.tcgetattr(fd)
-        tty.setcbreak(fd)
+        # TCSANOW keeps queued input; the default TCSAFLUSH would drop a
+        # keypress that arrived before the pane finished initializing.
+        tty.setcbreak(fd, termios.TCSANOW)
     except (termios.error, OSError, ValueError):
         saved = None
     wake_r, wake_w = os.pipe()
@@ -99,7 +101,12 @@ def wait_for_exit() -> None:
         os.close(wake_r)
         os.close(wake_w)
         if saved is not None:
-            termios.tcsetattr(fd, termios.TCSADRAIN, saved)
+            try:
+                # TCSANOW: TCSADRAIN waits for the PTY output queue to drain,
+                # which blocks forever when the other side stopped reading.
+                termios.tcsetattr(fd, termios.TCSANOW, saved)
+            except (termios.error, OSError):
+                pass
 
 
 def main() -> int:
@@ -117,6 +124,16 @@ def main() -> int:
         wait_for_exit()
     except (KeyboardInterrupt, SystemExit):
         pass
+    # The PTY may already be gone when the pane was closed. On Linux the
+    # interpreter-shutdown flush of stdout then fails and turns the exit code
+    # into 120, so point the standard streams at devnull before returning.
+    try:
+        sys.stdout.flush()
+    except OSError:
+        pass
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(devnull, 1)
+    os.dup2(devnull, 2)
     return 0
 
 
