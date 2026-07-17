@@ -1,0 +1,26 @@
+id = "ugurtarlig.pane-picker"
+name = "Pane Picker"
+version = "0.1.0"
+min_herdr_version = "0.7.4"
+description = "Focus a Herdr pane by typing its on-pane character hint"
+platforms = ["macos"]
+
+[[actions]]
+id = "open"
+title = "Pick a pane"
+contexts = ["workspace"]
+command = ["python3", "pane_picker.py", "open"]
+
+[[actions]]
+id = "show"
+title = "Show pane hints"
+contexts = ["workspace"]
+command = ["python3", "pane_picker.py", "show"]
+
+[[panes]]
+id = "picker"
+title = "Pane picker"
+placement = "popup"
+width = 52
+height = 4
+command = ["python3", "pane_picker.py", "pick"]
