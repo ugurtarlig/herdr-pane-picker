@@ -116,6 +116,7 @@ integration as well.
 ## Controls
 
 - Type the visible letter to focus that pane.
+- Type the letter with Shift held to focus and zoom that pane.
 - Press Escape or Ctrl-G to cancel.
 - Hints clear automatically after six seconds.
 
